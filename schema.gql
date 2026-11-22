@@ -1,0 +1,114 @@
+type Achievement {
+  id: ID!
+  text: String!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Experience {
+  """Достижения на этом месте работы"""
+  achievements: [Achievement!]!
+  company: String!
+
+  """Чем занимается компания / продукт"""
+  companyDescription: String
+
+  """Длительность в месяцах (включительно)"""
+  durationMonths: Int!
+
+  """null — работаю сейчас"""
+  endDate: DateTime
+  id: ID!
+
+  """Работаю здесь сейчас"""
+  isCurrent: Boolean!
+
+  """Период работы, например «Январь 2025 — Сентябрь 2025»"""
+  period: String!
+  position: String!
+  startDate: DateTime!
+}
+
+"""Контакт или профессиональный ресурс"""
+type Link {
+  id: ID!
+  kind: LinkKind!
+  label: String!
+  url: String!
+}
+
+"""Тип контакта / ресурса"""
+enum LinkKind {
+  EMAIL
+  GITHUB
+  LINKEDIN
+  OTHER
+  TELEGRAM
+  WEBSITE
+}
+
+type Profile {
+  """Краткое описание"""
+  description: String!
+
+  """Опыт работы, начиная с последнего места"""
+  experience: [Experience!]!
+
+  """Специализация одной строкой"""
+  headline: String!
+  id: ID!
+
+  """Контакты и профессиональные ресурсы"""
+  links: [Link!]!
+  name: String!
+  projects: [Project!]!
+
+  """Навыки, сгруппированные по категориям"""
+  skillGroups: [SkillGroup!]!
+  skills(category: SkillCategory): [Skill!]!
+  slug: String!
+}
+
+type Project {
+  description: String!
+  id: ID!
+  name: String!
+
+  """Ссылка на репозиторий"""
+  repositoryUrl: String
+  technologies: [String!]!
+
+  """Ссылка на работающий проект"""
+  url: String
+}
+
+type Query {
+  """Профиль специалиста (по умолчанию — владелец визитки)"""
+  profile(slug: String): Profile!
+}
+
+type Skill {
+  category: SkillCategory!
+  id: ID!
+  name: String!
+}
+
+"""Категория навыка"""
+enum SkillCategory {
+  AI_TOOLS
+  BACKEND
+  DATABASE
+  DEVOPS
+  FRONTEND
+  GAMEDEV
+  LANGUAGE
+}
+
+"""Навыки, сгруппированные по категории"""
+type SkillGroup {
+  category: SkillCategory!
+  skills: [Skill!]!
+}
